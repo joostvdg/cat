@@ -1,6 +1,6 @@
 package application
 
 type Label struct {
-    Key string
-    Value string
+	Key   string
+	Value string
 }
