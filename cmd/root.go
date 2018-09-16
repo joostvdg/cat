@@ -8,10 +8,12 @@ import (
 )
 
 var ServerPort string
+var PersistenceBackend string
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
 	serveCmd.Flags().StringVarP(&ServerPort, "port", "p", "7777", "Port to run the API server on")
+	serveCmd.Flags().StringVarP(&PersistenceBackend, "persistenceBackend", "b", "mem", "The persistence backend to use [mem,etcd]")
 	rootCmd.AddCommand(serveCmd)
 }
 
@@ -20,7 +22,7 @@ var serveCmd = &cobra.Command{
 	Short: "Runs CAT's API server",
 	Long:  `This will run the web API server of CAT, it's main function`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api.Serve(ServerPort)
+		api.Serve(ServerPort, PersistenceBackend)
 	},
 }
 

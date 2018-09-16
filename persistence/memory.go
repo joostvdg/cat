@@ -1,41 +1,42 @@
 package persistence
 
 import (
-    "github.com/joostvdg/cat/application"
+	"github.com/joostvdg/cat/application"
 )
 
-var applications map[string]application.Application
-
-func InitMemoryMap() {
-	applications = make(map[string]application.Application)
+type memory struct {
+	Applications map[string]application.Application
 }
 
-// TODO: if query is filter on keys, we only give the ids?!
-//func GetAllIds() []string {
-//
-//}
+func (m *memory) GetAllIds() []string {
+	keys := make([]string, 0, len(m.Applications))
+	for key := range m.Applications {
+		keys = append(keys, key)
+	}
+	return keys
+}
 
-func GetAll() []application.Application {
-	apps := make([]application.Application, 0, len(applications))
-	for _,app := range applications {
+func (m *memory) GetAll() []application.Application {
+	apps := make([]application.Application, 0, len(m.Applications))
+	for _, app := range m.Applications {
 		apps = append(apps, app)
 	}
 	return apps
 }
 
-func Add(app application.Application) {
-	applications[app.UUID] = app
+func (m *memory) Add(app application.Application) {
+	m.Applications[app.UUID] = app
 }
 
-func Exists(app application.Application) bool {
-	_, ok := applications[app.UUID]
+func (m *memory) Exists(app application.Application) bool {
+	_, ok := m.Applications[app.UUID]
 	return ok
 }
 
-func GetOne(uuid string) application.Application {
-	return applications[uuid]
+func (m *memory) GetOne(uuid string) application.Application {
+	return m.Applications[uuid]
 }
 
-func Remove(app application.Application) {
-	delete(applications, app.UUID)
+func (m *memory) Remove(app application.Application) {
+	delete(m.Applications, app.UUID)
 }
