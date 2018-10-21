@@ -62,7 +62,8 @@ spec:
                     sh 'curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $GOPATH/bin v1.10.2'
                     // execute linter
                     sh 'golangci-lint --version'
-                    sh 'golangci-lint run'
+                    sh 'go get -v'
+                    sh 'golangci-lint run --issues-exit-code=0'
                 }
 
             }
@@ -74,7 +75,7 @@ spec:
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
-                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=index.docker.io/v1/caladreas/cat
+                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=index.docker.io/caladreas/cat
                     '''
                 }
             }
