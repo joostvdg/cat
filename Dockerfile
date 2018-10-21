@@ -1,6 +1,7 @@
 FROM golang:1.11 AS build
 WORKDIR /src
 ENV LAST_UPDATE=20181020
+ENV GOCACHE=/tmp
 COPY . /src
 RUN go get -d -v -t
 # Yes, shame on me
