@@ -1,15 +1,15 @@
 package api
 
 import (
-    "fmt"
-    "github.com/facebookgo/grace/gracehttp"
-    "github.com/google/uuid"
-    "github.com/joostvdg/cat/application"
-    "github.com/joostvdg/cat/persistence"
-    "github.com/labstack/echo"
-    "github.com/labstack/echo/middleware"
-    "go.uber.org/zap"
-    "net/http"
+	"fmt"
+	"github.com/facebookgo/grace/gracehttp"
+	"github.com/google/uuid"
+	"github.com/joostvdg/cat/application"
+	"github.com/joostvdg/cat/persistence"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+	"go.uber.org/zap"
+	"net/http"
 )
 
 var persistenceBackend persistence.PersistenceBackend
@@ -44,8 +44,8 @@ func initPersistence(backendType string) error {
 		Namespace:   "joostvdg",
 		ArtifactIDs: []string{"gav://com.github.joostvdg.demo:maven-demo-lib:0.1.1"},
 		Sources:     []string{"https://github.com/joostvdg/maven-demo-lib.git"},
-		Labels:      []application.Label{ application.Label{Key: "Category", Value: "BuildTool"}},
-		Annotations: []application.Annotation { application.Annotation{ Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
+		Labels:      []application.Label{{Key: "Category", Value: "BuildTool"}},
+		Annotations: []application.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
 	})
 
 	persistenceBackend.Add(application.Application{
@@ -55,8 +55,8 @@ func initPersistence(backendType string) error {
 		Namespace:   "CI",
 		ArtifactIDs: []string{"https://registry.hub.docker.com/library/jenkins@sha256:81040e35ee59322a02f67ca2584f814d543d5f2f5d361fb8bf4f9e0046f3e809"},
 		Sources:     []string{"https://github.com/jenkinsci/jenkins.git"},
-        Labels:      []application.Label{ application.Label{Key: "Category", Value: "BuildTool"}},
-        Annotations: []application.Annotation { application.Annotation{ Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
+		Labels:      []application.Label{{Key: "Category", Value: "BuildTool"}},
+		Annotations: []application.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
 	})
 	return nil
 }

@@ -1,8 +1,8 @@
 package persistence
 
 import (
-    "fmt"
-    "github.com/joostvdg/cat/application"
+	"fmt"
+	"github.com/joostvdg/cat/application"
 )
 
 func initMemoryMap() PersistenceBackend {
