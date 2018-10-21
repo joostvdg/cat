@@ -9,7 +9,7 @@
  * https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-in-the-cluster-that-holds-your-authorization-token
  *
  * ie.
- * kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=csanchez --docker-password=mypassword --docker-email=john@doe.com
+ * kubectl create secret docker-registry regcred --docker-server=index.docker.io --docker-username=csanchez --docker-password=mypassword --docker-email=john@doe.com
  */
 
 pipeline {
@@ -68,6 +68,13 @@ spec:
 
             }
         }
+        stage('Build') {
+            steps {
+                container('golang') {
+                    sh './build-go-bin.sh'
+                }
+            }
+        }
         stage('Make Image') {
             environment {
                 PATH = "/busybox:$PATH"
@@ -75,7 +82,7 @@ spec:
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
-                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=index.docker.io/caladreas/cat
+                    /kaniko/executor -f `pwd`/Dockerfile.run -c `pwd` --cache=true --destination=index.docker.io/caladreas/cat
                     '''
                 }
             }
