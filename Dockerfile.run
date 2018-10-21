@@ -4,4 +4,4 @@ LABEL authors="Joost van der Griendt <joostvdg@gmail.com>"
 LABEL version="0.1.0"
 LABEL description="Docker image for CAT"
 ENTRYPOINT ["catz", "serve"]
-COPY ./bin/cat /usr/local/bin/catz
+COPY bin/cat /usr/local/bin/catz
