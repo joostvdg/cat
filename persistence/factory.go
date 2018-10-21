@@ -1,9 +1,8 @@
 package persistence
 
 import (
-	"errors"
-	"fmt"
-	"github.com/joostvdg/cat/application"
+    "fmt"
+    "github.com/joostvdg/cat/application"
 )
 
 func initMemoryMap() PersistenceBackend {
@@ -18,6 +17,6 @@ func InitPersistenceBackend(persistenceBackend string) (PersistenceBackend, erro
 	case MEM:
 		return initMemoryMap(), nil
 	default:
-		return &Empty{}, errors.New(fmt.Sprint("%s is not a supported persistence backend", persistenceBackend))
+		return &Empty{}, fmt.Errorf("%s is not a supported persistence backend", persistenceBackend)
 	}
 }

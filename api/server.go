@@ -1,16 +1,15 @@
 package api
 
 import (
-	"errors"
-	"fmt"
-	"github.com/facebookgo/grace/gracehttp"
-	"github.com/google/uuid"
-	"github.com/joostvdg/cat/application"
-	"github.com/joostvdg/cat/persistence"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"go.uber.org/zap"
-	"net/http"
+    "fmt"
+    "github.com/facebookgo/grace/gracehttp"
+    "github.com/google/uuid"
+    "github.com/joostvdg/cat/application"
+    "github.com/joostvdg/cat/persistence"
+    "github.com/labstack/echo"
+    "github.com/labstack/echo/middleware"
+    "go.uber.org/zap"
+    "net/http"
 )
 
 var persistenceBackend persistence.PersistenceBackend
@@ -24,8 +23,7 @@ func Serve(port string, persistenceBackendType string) {
 	)
 	err := initPersistence(persistenceBackendType)
 	if err != nil {
-		sugar.Errorw("Could not initialize persistence backend",
-			"Error", err)
+		sugar.Errorw("Could not initialize persistence backend", "Error", err)
 	}
 
 	sugar.Infow("Initializing web server")
@@ -35,7 +33,7 @@ func Serve(port string, persistenceBackendType string) {
 func initPersistence(backendType string) error {
 	persistenceTemp, err := persistence.InitPersistenceBackend(backendType)
 	if err != nil {
-		return errors.New(fmt.Sprint("%s is not a supported persistence backend", backendType))
+		return fmt.Errorf("%s is not a supported persistence backend", backendType)
 	}
 	persistenceBackend = persistenceTemp
 

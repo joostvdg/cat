@@ -23,11 +23,11 @@ type PersistenceBackend interface {
 type Empty struct{}
 
 func (e *Empty) GetAllIds() []string {
-	return make([]string, 0, 0)
+	return make([]string, 0)
 }
 
 func (e Empty) GetAll() []application.Application {
-	return make([]application.Application, 0, 0)
+	return make([]application.Application, 0)
 }
 
 func (e Empty) Add(app application.Application) {}
