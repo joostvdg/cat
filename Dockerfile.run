@@ -1,4 +1,4 @@
-FROM scratch
+FROM alpine:3.8
 ENV LAST_UPDATE=20180921
 LABEL authors="Joost van der Griendt <joostvdg@gmail.com>"
 LABEL version="0.1.0"
