@@ -1,0 +1,14 @@
+#FROM ubuntu:18.10
+FROM golang:1.11
+ENV IMG_SHA256="c7db856ef0472df30115c3f76180a1c001d22406e22dbae60a648cc0afee15d3"
+RUN apt-get update && apt-get install -y curl git uidmap libseccomp-dev
+# uidmap libseccomp-dev
+# RUN go get github.com/opencontainers/runc
+# RUN cd $GOPATH/src/github.com/opencontainers/runc && make BUILDTAGS='seccomp apparmor' && make install BUILDTAGS='seccomp apparmor'
+# && echo "${IMG_SHA256}  /usr/local/bin/img" | sha256sum -c - \
+# RUN go get github.com/genuinetools/img
+# RUN cd $GOPATH/src/github.com/genuinetools/img && make BUILDTAGS="seccomp noembed" && make install BUILDTAGS="seccomp noembed"
+RUN curl -fSL "https://github.com/genuinetools/img/releases/download/v0.5.1/img-linux-amd64" -o "/usr/local/bin/img" && chmod a+x "/usr/local/bin/img"
+# RUN echo 1 > /proc/sys/kernel/unprivileged_userns_clone
+RUN sudo unshare -m -U --map-root-user
+# RUN img -h
