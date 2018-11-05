@@ -1,7 +1,7 @@
-package api
+package web
 
 import (
-	"github.com/joostvdg/cat/persistence"
+	"github.com/joostvdg/cat/internal/pkg/persistence"
 	"github.com/labstack/echo"
 )
 

@@ -1,6 +1,6 @@
 package persistence
 
-import "github.com/joostvdg/cat/application"
+import "github.com/joostvdg/cat/pkg/application"
 
 const (
 	MEM  string = "mem"

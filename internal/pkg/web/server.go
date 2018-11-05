@@ -1,33 +1,41 @@
-package api
+package web
 
 import (
 	"fmt"
 	"github.com/facebookgo/grace/gracehttp"
 	"github.com/google/uuid"
-	"github.com/joostvdg/cat/application"
-	"github.com/joostvdg/cat/persistence"
+	"github.com/joostvdg/cat/internal/pkg/persistence"
+	"github.com/joostvdg/cat/pkg/application"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
+    joonix "github.com/joonix/log"
 	"net/http"
 )
+
+func init() {
+	// Log as JSON instead of the default ASCII formatter.
+	// log.SetFormatter(&log.JSONFormatter{})
+
+	log.SetReportCaller(true)
+	log.SetLevel(log.InfoLevel)
+    log.SetFormatter(&joonix.FluentdFormatter{})
+}
 
 var persistenceBackend persistence.PersistenceBackend
 
 func Serve(port string, persistenceBackendType string) {
-	sugar := zap.NewExample().Sugar()
-	defer sugar.Sync()
+	log.WithFields(log.Fields{
+		"type": "in-memory",
+	}).Info("Initializing persistence")
 
-	sugar.Infow("Initializing persistence",
-		"type", "in-memory",
-	)
 	err := initPersistence(persistenceBackendType)
 	if err != nil {
-		sugar.Errorw("Could not initialize persistence backend", "Error", err)
+		log.Error("Could not initialize persistence backend", "Error", err)
 	}
 
-	sugar.Infow("Initializing web server")
-	initWebServer(port, sugar)
+	log.Info("Initializing web server")
+	initWebServer(port)
 }
 
 func initPersistence(backendType string) error {
@@ -61,7 +69,7 @@ func initPersistence(backendType string) error {
 	return nil
 }
 
-func initWebServer(port string, sugar *zap.SugaredLogger) {
+func initWebServer(port string) {
 	// Setup
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
@@ -89,10 +97,9 @@ func initWebServer(port string, sugar *zap.SugaredLogger) {
 		return false, nil
 	}))
 
-	// Serve it like a boss
-	sugar.Infow("Starting server",
-		"port", port,
-	)
+	log.WithFields(log.Fields{
+		"port": port,
+	}).Info("Starting server")
 	e.Logger.Fatal(gracehttp.Serve(e.Server))
 }
 

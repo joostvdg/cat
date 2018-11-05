@@ -1,7 +1,7 @@
 package persistence
 
 import (
-	"github.com/joostvdg/cat/application"
+	"github.com/joostvdg/cat/pkg/application"
 )
 
 type memory struct {

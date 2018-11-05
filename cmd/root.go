@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/joostvdg/cat/api"
+	"github.com/joostvdg/cat/internal/pkg/web"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -22,7 +22,7 @@ var serveCmd = &cobra.Command{
 	Short: "Runs CAT's API server",
 	Long:  `This will run the web API server of CAT, it's main function`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api.Serve(ServerPort, PersistenceBackend)
+		web.Serve(ServerPort, PersistenceBackend)
 	},
 }
 

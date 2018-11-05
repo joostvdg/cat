@@ -1,8 +1,8 @@
-package api
+package web
 
 import (
 	"github.com/google/uuid"
-	"github.com/joostvdg/cat/application"
+	"github.com/joostvdg/cat/pkg/application"
 	"github.com/labstack/echo"
 	"net/http"
 )
