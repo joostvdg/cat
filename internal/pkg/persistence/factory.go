@@ -2,12 +2,12 @@ package persistence
 
 import (
 	"fmt"
-	"github.com/joostvdg/cat/pkg/application"
+    "github.com/joostvdg/cat/pkg/api/v1"
 )
 
 func initMemoryMap() PersistenceBackend {
 	m := memory{
-		Applications: make(map[string]application.Application),
+		Applications: make(map[string]v1.Application),
 	}
 	return &m
 }

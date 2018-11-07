@@ -1,11 +1,18 @@
 package persistence
 
 import (
-	"github.com/joostvdg/cat/pkg/application"
+    "fmt"
+    "github.com/google/uuid"
+    "github.com/joostvdg/cat/pkg/api/v1"
 )
 
 type memory struct {
-	Applications map[string]application.Application
+	Applications map[string]v1.Application
+}
+
+
+func (m *memory) PersistenceType() string {
+    return "in-memory"
 }
 
 func (m *memory) GetAllIds() []string {
@@ -16,27 +23,37 @@ func (m *memory) GetAllIds() []string {
 	return keys
 }
 
-func (m *memory) GetAll() []application.Application {
-	apps := make([]application.Application, 0, len(m.Applications))
+func (m *memory) GetAll() []v1.Application {
+	apps := make([]v1.Application, 0, len(m.Applications))
 	for _, app := range m.Applications {
 		apps = append(apps, app)
 	}
 	return apps
 }
 
-func (m *memory) Add(app application.Application) {
-	m.Applications[app.UUID] = app
+func (m *memory) Add(app v1.Application) (string, error) {
+    if app.Uuid != "" {
+        return "", fmt.Errorf("cannot add application, already has a UUID")
+    }
+    app.Uuid = uuid.New().String()
+    m.Applications[app.Uuid] = app
+    return app.Uuid, nil
 }
 
-func (m *memory) Exists(app application.Application) bool {
-	_, ok := m.Applications[app.UUID]
+func (m *memory) Exists(uuid string) bool {
+	_, ok := m.Applications[uuid]
 	return ok
 }
 
-func (m *memory) GetOne(uuid string) application.Application {
+func (m *memory) GetOne(uuid string) v1.Application {
 	return m.Applications[uuid]
 }
 
-func (m *memory) Remove(app application.Application) {
-	delete(m.Applications, app.UUID)
+func (m *memory) Remove(uuid string) bool {
+    removed := false
+    if m.Exists(uuid) {
+        delete(m.Applications, uuid)
+        removed = m.Exists(uuid)
+    }
+	return removed
 }

@@ -2,28 +2,41 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/joostvdg/cat/internal/pkg/web"
 	"github.com/spf13/cobra"
 	"os"
 )
 
 var ServerPort string
-var PersistenceBackend string
+var PersistenceBackendType string
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
-	serveCmd.Flags().StringVarP(&ServerPort, "port", "p", "7777", "Port to run the API server on")
-	serveCmd.Flags().StringVarP(&PersistenceBackend, "persistenceBackend", "b", "mem", "The persistence backend to use [mem,etcd]")
-	rootCmd.AddCommand(serveCmd)
+
+    serveGrpcCmd.Flags().StringVarP(&ServerPort, "port", "p", "9090", "Port to run the gRPC API server on")
+    serveGrpcCmd.Flags().StringVarP(&PersistenceBackendType, "persistenceBackend", "b", "mem", "The persistence backend to use [mem,etcd]")
+    rootCmd.AddCommand(serveGrpcCmd)
+
+	serveHttpCmd.Flags().StringVarP(&ServerPort, "port", "p", "7777", "Port to run the HTTP API server on")
+	serveHttpCmd.Flags().StringVarP(&PersistenceBackendType, "persistenceBackend", "b", "mem", "The persistence backend to use [mem,etcd]")
+	rootCmd.AddCommand(serveHttpCmd)
 }
 
-var serveCmd = &cobra.Command{
-	Use:   "serve",
-	Short: "Runs CAT's API server",
-	Long:  `This will run the web API server of CAT, it's main function`,
+var serveHttpCmd = &cobra.Command{
+	Use:   "http",
+	Short: "Runs CAT's API server (HTTP)",
+	Long:  `This will run the http API server of CAT, it's main function`,
 	Run: func(cmd *cobra.Command, args []string) {
-		web.Serve(ServerPort, PersistenceBackend)
+        StartWebserver(ServerPort, PersistenceBackendType)
 	},
+}
+
+var serveGrpcCmd = &cobra.Command{
+    Use:   "grpc",
+    Short: "Runs CAT's API server (GRPC)",
+    Long:  `This will run the gRPC API server of CAT, it's main function`,
+    Run: func(cmd *cobra.Command, args []string) {
+        StartGRPCServer(PersistenceBackendType, ServerPort)
+    },
 }
 
 var versionCmd = &cobra.Command{

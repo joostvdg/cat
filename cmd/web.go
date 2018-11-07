@@ -1,16 +1,21 @@
-package web
+package cmd
 
 import (
 	"fmt"
+    "net/http"
+
 	"github.com/facebookgo/grace/gracehttp"
 	"github.com/google/uuid"
-	"github.com/joostvdg/cat/internal/pkg/persistence"
-	"github.com/joostvdg/cat/pkg/application"
+
+	joonix "github.com/joonix/log"
+    log "github.com/sirupsen/logrus"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	log "github.com/sirupsen/logrus"
-    joonix "github.com/joonix/log"
-	"net/http"
+
+    "github.com/joostvdg/cat/internal/pkg/persistence"
+    "github.com/joostvdg/cat/internal/pkg/web"
+    "github.com/joostvdg/cat/pkg/api/v1"
 )
 
 func init() {
@@ -19,12 +24,12 @@ func init() {
 
 	log.SetReportCaller(true)
 	log.SetLevel(log.InfoLevel)
-    log.SetFormatter(&joonix.FluentdFormatter{})
+	log.SetFormatter(&joonix.FluentdFormatter{})
 }
 
 var persistenceBackend persistence.PersistenceBackend
 
-func Serve(port string, persistenceBackendType string) {
+func StartWebserver(port string, persistenceBackendType string) {
 	log.WithFields(log.Fields{
 		"type": "in-memory",
 	}).Info("Initializing persistence")
@@ -45,26 +50,26 @@ func initPersistence(backendType string) error {
 	}
 	persistenceBackend = persistenceTemp
 
-	persistenceBackend.Add(application.Application{
+	persistenceBackend.Add(v1.Application{
 		Name:        "Maven Demo Library",
 		Description: "A small Maven Java library for demo purposes",
-		UUID:        uuid.New().String(),
+		Uuid:        uuid.New().String(),
 		Namespace:   "joostvdg",
 		ArtifactIDs: []string{"gav://com.github.joostvdg.demo:maven-demo-lib:0.1.1"},
 		Sources:     []string{"https://github.com/joostvdg/maven-demo-lib.git"},
-		Labels:      []application.Label{{Key: "Category", Value: "BuildTool"}},
-		Annotations: []application.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
+		Labels:      []*v1.Label{{Key: "Category", Value: "BuildTool"}},
+		Annotations: []*v1.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
 	})
 
-	persistenceBackend.Add(application.Application{
+	persistenceBackend.Add(v1.Application{
 		Name:        "Jenkins",
 		Description: "Jenkins, the most awesome CI engine",
-		UUID:        uuid.New().String(),
+		Uuid:        uuid.New().String(),
 		Namespace:   "CI",
 		ArtifactIDs: []string{"https://registry.hub.docker.com/library/jenkins@sha256:81040e35ee59322a02f67ca2584f814d543d5f2f5d361fb8bf4f9e0046f3e809"},
 		Sources:     []string{"https://github.com/jenkinsci/jenkins.git"},
-		Labels:      []application.Label{{Key: "Category", Value: "BuildTool"}},
-		Annotations: []application.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
+		Labels:      []*v1.Label{{Key: "Category", Value: "BuildTool"}},
+		Annotations: []*v1.Annotation{{Key: "MetricsGroup", Value: "CI", Origin: "com.github.joostvdg"}},
 	})
 	return nil
 }
@@ -77,12 +82,12 @@ func initWebServer(port string) {
 	})
 	e.Server.Addr = ":" + port
 	e.GET("/users/:id", getUser)
-	e.GET("/applications", GetApplications)
-	e.PUT("/applications", PostApplication)
+	e.GET("/applications", web.GetApplications)
+	e.PUT("/applications", web.PostApplication)
 
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			cc := &CustomContext{
+			cc := &web.CustomContext{
 				c,
 				persistenceBackend,
 			}

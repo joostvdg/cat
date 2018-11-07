@@ -1,10 +1,106 @@
 syntax = "proto3";
 package v1;
 
-import "google/protobuf/timestamp.proto";
-
-// SERVICE
-
-
+// Service to manage Applications
+service ApplicationService {
+    rpc Create(CreateRequest) returns (CreateResponse);
+    rpc Read(ReadRequest) returns (ReadResponse);
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+}
 
 // MESSAGES
+
+message Annotation {
+    string Origin = 1;
+    string Key = 2;
+    string Value = 3;
+}
+
+message Label {
+    string Key = 1;
+    string Value = 2;
+}
+
+// Application
+message Application {
+    string uuid = 1;
+    string description = 2;
+    string name = 3;
+    string namespace = 4;
+    repeated string sources = 5;
+    repeated string artifactIDs = 6;
+    repeated Label labels = 7;
+    repeated Annotation annotations = 8;
+}
+
+
+// Request data to create a new Application
+message CreateRequest {
+    string api = 1;
+    Application application = 2;
+}
+
+// Returns UUID of created Application
+message CreateResponse {
+    string api = 1;
+    string uuid = 2;
+}
+
+// Request data to read Application
+message ReadRequest {
+    string api = 1;
+    string uuid = 2;
+}
+
+// Contains Application data specified in by ID request
+message ReadResponse {
+    string api = 1;
+    Application application = 2;
+}
+
+// Request data to update Application
+message UpdateRequest {
+    string api = 1;
+    Application application = 2;
+}
+
+// Contains status of update operation
+message UpdateResponse {
+    string api = 1;
+
+    // Contains number of entities have beed updated
+    // Equals 1 in case of succesfull update
+    int64 updated = 2;
+}
+
+// Request data to delete Application
+message DeleteRequest{
+    string api = 1;
+
+    // Unique identifier of the Application to delete
+    string uuid = 2;
+}
+
+// Contains status of delete operation
+message DeleteResponse {
+    string api = 1;
+
+    // Contains number of entities have been deleted
+    // Equals 1 in case of succesfull delete
+    int64 deleted = 2;
+}
+
+// Request data to read all Applications
+message ReadAllRequest {
+    string api = 1;
+}
+
+// Contains list of all Applications
+message ReadAllResponse{
+    string api = 1;
+
+    // List of all Applications
+    repeated Application applications = 2;
+}
