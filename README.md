@@ -15,6 +15,12 @@ More information should be a relation to external systems only, so this stays li
 
 For me to learn more about Go, distributed computing, ETCD and more.
 
+## ToDo
+
+* add to GitOps pipeline
+* write all the articles
+* read from a pub/sub queue - Redis?
+
 ## Dependencies used
 
 * Echo
