@@ -53,6 +53,10 @@ func (as *applicationServiceServer) Create(ctx context.Context, req *v1.CreateRe
         return nil, err
     }
 
+    log.WithFields(log.Fields{
+        "Name": req.Application.Name,
+    }).Info("Received application creation request")
+
     app := *req.Application
     if app.Uuid != "" && as.PersistenceBackend.Exists(app.Uuid) {
         log.Warnf("Application with uuid=%v already exists", app.Uuid)

@@ -42,7 +42,7 @@ spec:
             terminationGracePeriodSeconds: 10
             containers:
             - name: cat
-              image: caladreas/cat:0.1.0-b7
+              image: caladreas/cat:0.1.0-b8
               ports:
               - containerPort: 80
                 name: health
