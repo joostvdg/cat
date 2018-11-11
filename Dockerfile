@@ -14,6 +14,6 @@ ENV LAST_UPDATE=20180921
 LABEL authors="Joost van der Griendt <joostvdg@gmail.com>"
 LABEL version="0.1.0"
 LABEL description="Docker image for CAT"
-CMD ["cat"]
+CMD ["cat", "grpc", "-p", "9090","-b","mem"]
 COPY --from=build /src/cat /usr/local/bin/cat
 RUN chmod +x /usr/local/bin/cat

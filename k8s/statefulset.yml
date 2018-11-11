@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: cat
+    labels:
+        app: cat
+        component: backend
+        part-of: cat
+spec:
+    ports:
+    - port: 7777
+      name: web
+    - port: 80
+      name: health
+    - port: 9090
+      name: grpc
+    clusterIP: None
+    selector:
+        app: cat
+        component: backend
+        part-of: cat
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: cat
+spec:
+    selector:
+        matchLabels:
+            app: cat
+            component: backend
+            part-of: cat
+    serviceName: "cat"
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: cat
+                component: backend
+                part-of: cat
+        spec:
+            terminationGracePeriodSeconds: 10
+            containers:
+            - name: cat
+              image: caladreas/cat:0.1.0-b7
+              ports:
+              - containerPort: 80
+                name: health
+              - containerPort: 777
+                name: web
+              - containerPort: 9090
+                name: grpc
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /healthz
+                  port: health
+                  scheme: HTTP
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /healthz
+                  port: health
+                  scheme: HTTP
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                limits:
+                    cpu: 100m
+                    memory: 20Mi
+                requests:
+                    cpu: 100m
+                    memory: 20Mi
