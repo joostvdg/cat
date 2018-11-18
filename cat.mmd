@@ -1,0 +1,8 @@
+graph TD;
+    CRD-->ApiServer;
+    ApiServer-->Queue;
+    CATController--pull-->Queue;
+    CATController--push-->RedisTopic;
+    CAT--read-->RedisTopic;
+    CAT-NIP--read-->CAT
+

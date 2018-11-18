@@ -21,6 +21,11 @@ For me to learn more about Go, distributed computing, ETCD and more.
 * write all the articles
 * read from a pub/sub queue - Redis?
 
+## Model
+
+![Model](cat-model.png "System Model")
+
+
 ## Dependencies used
 
 * Echo
