@@ -9,7 +9,7 @@ require (
 	github.com/golang/protobuf v1.2.0
 	github.com/google/uuid v1.1.1
 	github.com/joonix/log v0.0.0-20180502111528-d2d3f2f4a806
-	github.com/labstack/echo v3.3.5+incompatible
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.2.1 // indirect
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
